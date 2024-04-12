@@ -1,0 +1,54 @@
+<html lang="gb">
+<head>
+    <title>Development</title>
+    <script>
+        function set_session() {
+            fetch(
+                'http://127.0.0.1:5000/rpc/auth',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        frpc: 1.0,
+                        function: 'login',
+                        data: {
+                            username: 'admin',
+                            password: 'admin',
+                        }
+                    }),
+                }
+            )
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+
+        function do_fetch() {
+            fetch(
+                'http://127.0.0.1:5000/rpc/auth',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        frpc: 1.0,
+                        function: 'session',
+                        data: null
+                    }),
+                }
+            )
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+    </script>
+</head>
+
+<body>
+
+<button onclick="do_fetch()">Fetch</button>
+<button onclick="set_session()">Set Session</button>
+
+</body>
+</html>

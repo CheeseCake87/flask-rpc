@@ -1,0 +1,6 @@
+flask
+flask-orjson
+flask-sqlalchemy
+pydantic
+requests
+faker

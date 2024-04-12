@@ -1,0 +1,16 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "flask-rpc"
+authors = [{ name = "David Carmichael", email = "david@uilix.com" }]
+license = { file = "LICENSE" }
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version"]
+description = "Turn Flask into a simple RPC server"
+readme = "README.md"
+dependencies = [
+    'Flask',
+    'pydantic',
+]
