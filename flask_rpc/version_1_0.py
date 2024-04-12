@@ -31,7 +31,11 @@ class RPCResponse:
         return r
 
     @classmethod
-    def successful_response(cls, data: dict[str, t.Any] = None, message: str = None):
+    def successful_response(
+        cls,
+        data: t.Union[str, int, float, list, bool, dict[str, t.Any]] = None,
+        message: str = None,
+    ):
         r = {"frpc": 1.0, "ok": True}
 
         if message:
@@ -93,7 +97,7 @@ class RPC:
         except AssertionError:
             return RPCResponse.failed_response("Invalid function.")
 
-        if successful_response := self.LOOKUP[rpcm.function](params=rpcm.data):
+        if successful_response := self.LOOKUP[rpcm.function](data=rpcm.data):
             return successful_response
 
         return RPCResponse.failed_response("Unsuccessful command execution.")
