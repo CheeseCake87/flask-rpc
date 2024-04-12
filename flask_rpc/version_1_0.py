@@ -71,11 +71,11 @@ class RPC:
             return RPCResponse.failed_response("Invalid request.")
 
         try:
-            assert rpcm.func in self.LOOKUP
+            assert rpcm.function in self.LOOKUP
         except AssertionError:
             return RPCResponse.failed_response("Invalid function.")
 
-        if successful_response := self.LOOKUP[rpcm.func](params=rpcm.data):
+        if successful_response := self.LOOKUP[rpcm.function](params=rpcm.data):
             return successful_response
 
         return RPCResponse.failed_response("Unsuccessful command execution.")
