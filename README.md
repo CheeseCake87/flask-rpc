@@ -117,7 +117,7 @@ fetch("/rpc", {
     "Content-Type": "application/json"
   },
   body: frpc(
-    function="add_numbers",
+    function_="add_numbers",
     data=[1, 2, 3]
   )
 })
