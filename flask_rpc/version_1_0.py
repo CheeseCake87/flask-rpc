@@ -10,6 +10,16 @@ class RPCModel(BaseModel):
     data: t.Any
 
 
+class RPCRequest:
+    @classmethod
+    def build(cls, function: str, data: t.Optional[dict[str, t.Any]] = None) -> dict[str, t.Any]:
+        return {
+            "frpc": 1.0,
+            "function": function,
+            "data": data
+        }
+
+
 class RPCResponse:
     @classmethod
     def failed_response(cls, message: str = None, data: dict[str, t.Any] = None):
@@ -64,6 +74,12 @@ class RPC:
     def _rpc_route(self):
         if not request.is_json:
             return RPCResponse.failed_response("Request must be JSON.")
+
+        if not request.json:
+            return RPCResponse.failed_response("Request must not be empty.")
+
+        if not request.json.get("frpc") == 1.0:
+            return RPCResponse.failed_response("Invalid Flask-RPC version.")
 
         try:
             rpcm = RPCModel(**request.json)

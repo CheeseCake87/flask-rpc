@@ -11,6 +11,8 @@ def load_blueprints(flask_app):
 
 
 def load_models(flask_app, flask_db):
+    from app.models import clients
+
     flask_db.init_app(flask_app)
 
     with flask_app.app_context():
