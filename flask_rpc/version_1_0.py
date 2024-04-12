@@ -13,14 +13,14 @@ class RPCModel(BaseModel):
 class RPCRequest:
     @classmethod
     def build(
-        cls, function: str, data: t.Optional[dict[str, t.Any]] = None
-    ) -> dict[str, t.Any]:
+        cls, function: str, data: t.Optional[t.Dict[str, t.Any]] = None
+    ) -> t.Dict[str, t.Any]:
         return {"frpc": 1.0, "function": function, "data": data}
 
 
 class RPCResponse:
     @classmethod
-    def failed_response(cls, message: str = None, data: dict[str, t.Any] = None):
+    def failed_response(cls, message: str = None, data: t.Dict[str, t.Any] = None):
         r = {"frpc": 1.0, "ok": False}
 
         if message:
@@ -33,7 +33,7 @@ class RPCResponse:
     @classmethod
     def successful_response(
         cls,
-        data: t.Union[str, int, float, list, bool, dict[str, t.Any]] = None,
+        data: t.Union[str, int, float, list, bool, t.Dict[str, t.Any]] = None,
         message: str = None,
     ):
         r = {"frpc": 1.0, "ok": True}
@@ -47,7 +47,7 @@ class RPCResponse:
 
 
 class RPC:
-    LOOKUP: dict[str, t.Callable]
+    LOOKUP: t.Dict[str, t.Callable]
 
     def __init__(
         self, app_or_blueprint: t.Union[Flask, Blueprint], url_prefix: str = "/"
@@ -97,7 +97,7 @@ class RPC:
         except AssertionError:
             return RPCResponse.failed_response("Invalid function.")
 
-        if successful_response := self.LOOKUP[rpcm.function](data=rpcm.data):
+        if successful_response := self.LOOKUP[rpcm.function](rpcm.data):
             return successful_response
 
         return RPCResponse.failed_response("Unsuccessful command execution.")
