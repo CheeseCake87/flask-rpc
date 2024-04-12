@@ -1,2 +1,3 @@
 flit
 ruff
+pytest
