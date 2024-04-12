@@ -3,10 +3,11 @@ from flask import session
 from flask_rpc.latest import RPCResponse
 
 
-def login(params):
-    session["user_id"] = 1
+# _ is used to show that the function does not use the request object
+def login(_):
+    session["user_id"] = 100
     return RPCResponse.successful_response(
         data={
-            "user_id": 1,
+            "user_id": 100,
         }
     )
