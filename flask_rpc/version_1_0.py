@@ -12,12 +12,10 @@ class RPCModel(BaseModel):
 
 class RPCRequest:
     @classmethod
-    def build(cls, function: str, data: t.Optional[dict[str, t.Any]] = None) -> dict[str, t.Any]:
-        return {
-            "frpc": 1.0,
-            "function": function,
-            "data": data
-        }
+    def build(
+        cls, function: str, data: t.Optional[dict[str, t.Any]] = None
+    ) -> dict[str, t.Any]:
+        return {"frpc": 1.0, "function": function, "data": data}
 
 
 class RPCResponse:
@@ -47,7 +45,9 @@ class RPCResponse:
 class RPC:
     LOOKUP: dict[str, t.Callable]
 
-    def __init__(self, app_or_blueprint: t.Union[Flask, Blueprint], url_prefix: str = "/"):
+    def __init__(
+        self, app_or_blueprint: t.Union[Flask, Blueprint], url_prefix: str = "/"
+    ):
         self.LOOKUP = {}
 
         if not hasattr(app_or_blueprint, "add_url_rule"):
@@ -63,7 +63,9 @@ class RPC:
         for k, v in kwargs.items():
             self.LOOKUP[k] = v
 
-    def _register_route(self, route_compatible: t.Union[Flask, Blueprint], url_prefix: str):
+    def _register_route(
+        self, route_compatible: t.Union[Flask, Blueprint], url_prefix: str
+    ):
         route_compatible.add_url_rule(
             url_prefix,
             view_func=self._rpc_route,
