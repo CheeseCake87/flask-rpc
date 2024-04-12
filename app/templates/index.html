@@ -1,6 +1,7 @@
 <html lang="gb">
 <head>
     <title>Development</title>
+    <script src="https://unpkg.com/flask-rpc-js@latest/cdn.js"></script>
     <script>
         function set_session() {
             fetch(
@@ -10,14 +11,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        frpc: 1.0,
-                        function: 'login',
-                        data: {
-                            username: 'admin',
-                            password: 'admin',
-                        }
-                    }),
+                    body: frpc('session', null),
                 }
             )
                 .then(response => response.json())
@@ -32,11 +26,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        frpc: 1.0,
-                        function: 'session',
-                        data: null
-                    }),
+                    body: frpc('session', null),
                 }
             )
                 .then(response => response.json())
