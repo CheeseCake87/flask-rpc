@@ -3,6 +3,7 @@
     <title>Development</title>
     <script src="https://unpkg.com/flask-rpc-js@latest/cdn.js"></script>
     <script>
+        {# The examples below are setting and getting session cookies over fetch #}
         function set_session() {
             fetch(
                 'http://127.0.0.1:5000/rpc/auth',
@@ -11,7 +12,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: frpc('session', null),
+                    body: frpc('login', null),
                 }
             )
                 .then(response => response.json())
