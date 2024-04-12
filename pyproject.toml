@@ -6,7 +6,16 @@ build-backend = "flit_core.buildapi"
 name = "flask-rpc"
 authors = [{ name = "David Carmichael", email = "david@uilix.com" }]
 license = { file = "LICENSE" }
-classifiers = ["License :: OSI Approved :: MIT License"]
+classifiers = [
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    "License :: OSI Approved :: MIT License",
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    'Natural Language :: English',
+]
 dynamic = ["version"]
 description = "Turn Flask into a simple RPC server"
 readme = "README.md"
