@@ -77,7 +77,29 @@ class RPC:
 
     def functions(self, **kwargs: t.Callable):
         for k, v in kwargs.items():
+            if not callable(v):
+                raise TypeError(f"Expected a callable, got {type(v)}.")
+
+            if not v.__name__:
+                raise ValueError(f"Callable {v} must have a name.")
+
+            if k in self.LOOKUP:
+                raise ValueError(f"Function {k} already exists.")
+
             self.LOOKUP[k] = v
+
+    def functions_auto_name(self, functions: t.Iterable[t.Callable]):
+        for f in functions:
+            if not callable(f):
+                raise TypeError(f"Expected a callable, got {type(f)}.")
+
+            if not f.__name__:
+                raise ValueError(f"Callable {f} must have a name.")
+
+            if f.__name__ in self.LOOKUP:
+                raise ValueError(f"Function {f.__name__} already exists.")
+
+            self.LOOKUP[f.__name__] = f
 
     def _register_route(
         self, route_compatible: t.Union[Flask, Blueprint], url_prefix: str
