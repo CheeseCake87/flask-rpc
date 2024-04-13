@@ -22,7 +22,11 @@ class RPCRequest:
 
 class RPCResponse:
     @classmethod
-    def fail(cls, message: str = None, data: t.Dict[str, t.Any] = None):
+    def fail(
+        cls,
+        message: str = None,
+        data: t.Optional[str, int, float, bool, list[t.Any], t.Dict[str, t.Any]] = None,
+    ):
         r = {"frpc": 1.0, "ok": False}
 
         if message:
