@@ -4,7 +4,7 @@ import click
 import faker
 import requests
 
-from flask_rpc.latest import RPCRequest
+from flask_rpc.latest import RPCRequest as Req
 
 
 @click.group("run")
@@ -33,13 +33,13 @@ def create():
 # Using the RCPRequest class to make a request to the server
 
 @run.command("create-class")
-def create():
+def create_class():
     f = faker.Faker()
 
     click.echo("Creating a client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json=RPCRequest.build(
+        json=Req.build(
             function="create",
             data={"name": f.name()}
         )
@@ -48,82 +48,92 @@ def create():
 
 
 @run.command("read")
-def create():
+def read():
     click.echo("Reading client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json={
-            "frpc": 1.0,  # Required
-            "function": "read",
-            "data": {
-                "client_id": 1
-            }
-        }
+        json=Req.build(
+            function="read",
+            data={"client_id": 1}
+        )
     )
     pprint(response.json(), indent=2)
 
 
 @run.command("read-fail")
-def create():
+def read_fail():
     click.echo("Reading client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients/read",
-        json={
-            "frpc": 1.0,  # Required
-            "function": "read",
-            "data": {
-                "client_id": 1111
-            }
-        }
+        json=Req.build(
+            function="read",
+            data={"client_id": 11111}
+        )
     )
     pprint(response.json(), indent=2)
 
 
 @run.command("update")
-def create():
+def update():
     click.echo("Updating client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients/update",
-        json={
-            "frpc": 1.0,  # Required
-            "function": "update",
-            "data": {
-                "client_id": 1,
-                "name": "Jane Doe"
-            }
-        }
+        json=Req.build(
+            function="update",
+            data={"client_id": 1, "name": "John Doe"}
+        )
     )
     pprint(response.json(), indent=2)
 
 
 @run.command("delete")
-def create():
+def delete():
     click.echo("Deleting client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json={
-            "frpc": 1.0,  # Required
-            "function": "delete",
-            "data": {
-                "client_id": 1
-            }
-        }
+        json=Req.build(
+            function="delete",
+            data={"client_id": 1}
+        )
     )
     pprint(response.json(), indent=2)
 
 
 @run.command("fail")
-def create():
+def fail():
     click.echo("Sending bad command...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json={
-            "frpc": 1.0,  # Required
-            "function": "fail",
-            "data": {
-                "client_id": 1
-            }
-        }
+        json=Req.build(
+            function="fail",
+            data={"client_id": 1}
+        )
+    )
+    pprint(response.json(), indent=2)
+
+
+@run.command("t1")
+def test1():
+    click.echo("Running function...")
+    response = requests.post(
+        "http://127.0.0.1:5000/rpc/tester",
+        json=Req.build(
+            function="add_numbers",
+            data=[1, 2, 3]
+        )
+    )
+    pprint(response.json(), indent=2)
+
+
+@run.command("t2")
+def test2():
+    click.echo("Running function...")
+    response = requests.post(
+        "http://127.0.0.1:5000/rpc/tester",
+        json=Req.build(
+            function="add_string",
+            data="World"
+        )
     )
     pprint(response.json(), indent=2)
 
