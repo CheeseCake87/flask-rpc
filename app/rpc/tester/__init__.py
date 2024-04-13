@@ -7,4 +7,7 @@ bp = Blueprint("tester", __name__, url_prefix="/tester")
 
 rpc = RPC(bp)
 
-rpc.functions(add_numbers=add_numbers, add_string=add_string)
+rpc.functions(
+    add_string=add_string,
+)
+rpc.functions_auto_name((add_numbers,))
