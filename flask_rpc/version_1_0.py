@@ -19,6 +19,15 @@ class RPCRequest:
             str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
         ] = None,
     ) -> t.Dict[str, t.Any]:
+        """
+        Build a request.
+
+        Version 1.0.
+
+        :param function: Str
+        :param data: Any (JSON serializable)
+        :return:
+        """
         return {"frpc": 1.0, "function": function, "data": data}
 
 
@@ -31,6 +40,15 @@ class RPCResponse:
             str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
         ] = None,
     ):
+        """
+        Return a failed response.
+
+        Version 1.0.
+
+        :param message: Str
+        :param data: Any (JSON serializable)
+        :return:
+        """
         r = {"frpc": 1.0, "ok": False}
 
         if message:
@@ -48,6 +66,15 @@ class RPCResponse:
         ] = None,
         message: str = None,
     ):
+        """
+        Return a successful response.
+
+        Version 1.0.
+
+        :param data: Any (JSON serializable)
+        :param message: Str
+        :return:
+        """
         r = {"frpc": 1.0, "ok": True}
 
         if message:
@@ -64,6 +91,12 @@ class RPC:
     def __init__(
         self, app_or_blueprint: t.Union[Flask, Blueprint], url_prefix: str = "/"
     ):
+        """
+        Register the RPC route.
+
+        :param app_or_blueprint: Flask / Blueprint
+        :param url_prefix: Str
+        """
         self.LOOKUP = {}
 
         if not hasattr(app_or_blueprint, "add_url_rule"):
@@ -76,6 +109,14 @@ class RPC:
         self._register_route(app_or_blueprint, url_prefix)
 
     def functions(self, **kwargs: t.Callable):
+        """
+        Register RPC functions.
+
+        remote_name=local_name
+
+        :param kwargs:
+        :return: None
+        """
         for k, v in kwargs.items():
             if not callable(v):
                 raise TypeError(f"Expected a callable, got {type(v)}.")
@@ -89,6 +130,16 @@ class RPC:
             self.LOOKUP[k] = v
 
     def functions_auto_name(self, functions: t.Iterable[t.Callable]):
+        """
+        Register RPC functions with their local names.
+
+        remote_name=local_name
+
+        remote_name will always be the name of the function.
+
+        :param functions: Iterable of functions
+        :return: None
+        """
         for f in functions:
             if not callable(f):
                 raise TypeError(f"Expected a callable, got {type(f)}.")
