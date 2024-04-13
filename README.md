@@ -32,7 +32,7 @@ This is to ensure that the request is structured
 in the way to whatever version of Flask-RPC you are using.
 
 Other than that, the user is free to use whatever data validation
-they feel comfortable with, Pydantic, and Marshmallow are good choices.
+they feel comfortable with. Pydantic, and Marshmallow are good choices.
 
 The typical request/response cycle is as follows:
 
