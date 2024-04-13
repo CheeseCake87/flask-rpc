@@ -13,7 +13,9 @@ class RPCModel(BaseModel):
 class RPCRequest:
     @classmethod
     def build(
-        cls, function: str, data: t.Optional[t.Dict[str, t.Any]] = None
+        cls,
+        function: str,
+        data: t.Optional[str, int, float, bool, list[t.Any], t.Dict[str, t.Any]] = None,
     ) -> t.Dict[str, t.Any]:
         return {"frpc": 1.0, "function": function, "data": data}
 
