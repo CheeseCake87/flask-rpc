@@ -15,7 +15,9 @@ class RPCRequest:
     def build(
         cls,
         function: str,
-        data: t.Optional[str, int, float, bool, list[t.Any], t.Dict[str, t.Any]] = None,
+        data: t.Union[
+            str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
+        ] = None,
     ) -> t.Dict[str, t.Any]:
         return {"frpc": 1.0, "function": function, "data": data}
 
@@ -25,7 +27,9 @@ class RPCResponse:
     def fail(
         cls,
         message: str = None,
-        data: t.Optional[str, int, float, bool, list[t.Any], t.Dict[str, t.Any]] = None,
+        data: t.Union[
+            str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
+        ] = None,
     ):
         r = {"frpc": 1.0, "ok": False}
 
@@ -39,7 +43,9 @@ class RPCResponse:
     @classmethod
     def success(
         cls,
-        data: t.Union[str, int, float, list, bool, t.Dict[str, t.Any]] = None,
+        data: t.Union[
+            str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
+        ] = None,
         message: str = None,
     ):
         r = {"frpc": 1.0, "ok": True}
