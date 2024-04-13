@@ -22,7 +22,7 @@ class RPCRequest:
 
 class RPCResponse:
     @classmethod
-    def failed_response(cls, message: str = None, data: t.Dict[str, t.Any] = None):
+    def fail(cls, message: str = None, data: t.Dict[str, t.Any] = None):
         r = {"frpc": 1.0, "ok": False}
 
         if message:
@@ -33,7 +33,7 @@ class RPCResponse:
         return r
 
     @classmethod
-    def successful_response(
+    def success(
         cls,
         data: t.Union[str, int, float, list, bool, t.Dict[str, t.Any]] = None,
         message: str = None,
@@ -81,28 +81,28 @@ class RPC:
 
     def _rpc_route(self):
         if not request.is_json:
-            return RPCResponse.failed_response("Request must be JSON.")
+            return RPCResponse.fail("Request must be JSON.")
 
         if not request.json:
-            return RPCResponse.failed_response("Request must not be empty.")
+            return RPCResponse.fail("Request must not be empty.")
 
         if not request.json.get("frpc") == 1.0:
-            return RPCResponse.failed_response("Invalid Flask-RPC version.")
+            return RPCResponse.fail("Invalid Flask-RPC version.")
 
         try:
             rpcm = RPCModel(**request.json)
         except ValidationError:
-            return RPCResponse.failed_response("Invalid request.")
+            return RPCResponse.fail("Invalid request.")
 
         try:
             assert rpcm.function in self.LOOKUP
         except AssertionError:
-            return RPCResponse.failed_response("Invalid function.")
+            return RPCResponse.fail("Invalid function.")
 
         if successful_response := self.LOOKUP[rpcm.function](rpcm.data):
             return successful_response
 
-        return RPCResponse.failed_response("Unsuccessful command execution.")
+        return RPCResponse.fail("Unsuccessful command execution.")
 
 
 __all__ = ["RPC", "RPCResponse", "RPCModel"]
