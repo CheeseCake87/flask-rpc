@@ -6,7 +6,7 @@ pip install flask-rpc
 
 ---
 
-Flask Remote Procedure Call (RPC) is a simple
+Flask - Remote Procedure Call (RPC) is a simple
 library that allows you to expose functions
 in your Flask application to be called
 remotely. It is designed to be straightforward
@@ -16,6 +16,23 @@ Flask-RPC does not follow any current already existing
 RPC standard, but uses its own standard,
 and primarily works with JSON over HTTP POST
 requests to call functions.
+
+This extension is designed to stay slim and provides
+methods for generating requests and request responses.
+
+It does not enforce or validate the data passed in, or the 
+data being sent back; this is left to the user to implement 
+in whatever way they feel comfortable (or not at all, if there's
+no need for it)
+
+Flask-RPC does validate the request coming in using
+Pydantic.
+
+This is to ensure that the request is structured
+in the way to whatever version of Flask-RPC you are using.
+
+Other than that, the user is free to use whatever data validation
+they feel comfortable with, Pydantic, and Marshmallow are good choices.
 
 The typical request/response cycle is as follows:
 
@@ -80,7 +97,7 @@ Will register a POST route with the app or blueprint that you pass in.
 
 `rpc.functions(...)`
 
-Will register the functions that you pass in to be called remotely. 
+Will register the functions that you pass in to be called remotely.
 The argument names used will be the name of the function you will call remotely, for example:
 
 ```python
@@ -98,7 +115,6 @@ A request to the `/rpc` endpoint with the following JSON payload:
 import requests
 from flask_rpc import RPCRequest
 
-
 response = requests.post(
     "http://localhost:5000/rpc",
     json=RPCRequest.build(
@@ -112,14 +128,14 @@ or, if you're using the [JS library](https://github.com/CheeseCake87/flask-rpc-j
 
 ```js
 fetch("/rpc", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: frpc(
-    function_="add_numbers",
-    data=[1, 2, 3]
-  )
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: frpc(
+        function_ = "add_numbers",
+        data = [1, 2, 3]
+    )
 })
 ```
 
