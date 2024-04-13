@@ -61,7 +61,7 @@ from flask_rpc.latest import RPC, RPCResponse
 
 def add_numbers(data):
     if isinstance(data, list):
-        return RPCResponse.successful_response(
+        return RPCResponse.success(
             sum(data),
             "Function 'add_numbers' executed successfully"
         )
