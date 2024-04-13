@@ -6,9 +6,9 @@ def create_client(data):
     status, message, result = Clients.create(**data)
 
     if not status:
-        return RPCResponse.failed_response(message, data)
+        return RPCResponse.fail(message, data)
 
-    return RPCResponse.successful_response(
+    return RPCResponse.success(
         data={
             "client_id": result.client_id,
             "name": result.name,
@@ -22,9 +22,9 @@ def read_client(data):
     status, message, result = Clients.read(**data)
 
     if not status:
-        return RPCResponse.failed_response(message, data)
+        return RPCResponse.fail(message, data)
 
-    return RPCResponse.successful_response(
+    return RPCResponse.success(
         data={
             "client_id": result.client_id,
             "name": result.name,
@@ -38,9 +38,9 @@ def update_client(data):
     status, message, result = Clients.update(**data)
 
     if not status:
-        return RPCResponse.failed_response(message, data)
+        return RPCResponse.fail(message, data)
 
-    return RPCResponse.successful_response(
+    return RPCResponse.success(
         data={
             "client_id": result.client_id,
             "name": result.name,
@@ -54,8 +54,8 @@ def delete_client(data):
     status, message, result = Clients.delete(**data)
 
     if not status:
-        return RPCResponse.failed_response(message, data)
+        return RPCResponse.fail(message, data)
 
-    return RPCResponse.successful_response(
+    return RPCResponse.success(
         {"client_id": result.client_id, "name": result.name}
     )
