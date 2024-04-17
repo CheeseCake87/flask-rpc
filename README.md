@@ -91,6 +91,20 @@ rpc.functions(
 )
 ```
 
+or
+
+```python
+...
+RPC(
+    app,
+    url_prefix="/rpc",
+    functions={
+        "add_numbers": add_numbers
+    }
+)
+...
+```
+
 `RPC(...)`
 
 Will register a POST route with the app or blueprint that you pass in.
