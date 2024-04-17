@@ -89,7 +89,10 @@ class RPC:
     LOOKUP: t.Dict[str, t.Callable]
 
     def __init__(
-        self, app_or_blueprint: t.Union[Flask, Blueprint], url_prefix: str = "/"
+        self,
+        app_or_blueprint: t.Union[Flask, Blueprint],
+        url_prefix: str = "/",
+        functions: t.Dict[str, t.Callable] = None,
     ):
         """
         Register the RPC route.
@@ -107,6 +110,9 @@ class RPC:
             )
 
         self._register_route(app_or_blueprint, url_prefix)
+
+        if functions:
+            self.functions(**functions)
 
     def functions(self, **kwargs: t.Callable):
         """
@@ -170,7 +176,7 @@ class RPC:
             return RPCResponse.fail("Request must not be empty.")
 
         if not request.json.get("frpc") == 1.0:
-            return RPCResponse.fail("Invalid Flask-RPC version.")
+            return RPCResponse.fail("Invalid frpc version.")
 
         try:
             rpcm = RPCModel(**request.json)
