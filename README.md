@@ -12,7 +12,7 @@ in your Flask application to be called
 remotely. It is designed to be straightforward
 to use and easy to understand.
 
-Flask-RPC uses mRPC as its protocol, which is a
+Flask-RPC uses wRPC (Wee RPC) as its protocol, which is a
 micro JSON-based protocol that allows for
 easy communication between the client and server.
 
