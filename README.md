@@ -12,8 +12,8 @@ in your Flask application to be called
 remotely. It is designed to be straightforward
 to use and easy to understand.
 
-Flask-RPC uses wRPC (Wee RPC) as its protocol, which is a
-micro JSON-based protocol that allows for
+Flask-RPC uses [wRPC (Wee RPC)](https://github.com/CheeseCake87/wRPC) 
+as its protocol, which is a micro JSON-based protocol that allows for
 easy communication between the client and server.
 
 This extension is designed to stay slim and provides
