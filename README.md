@@ -12,10 +12,9 @@ in your Flask application to be called
 remotely. It is designed to be straightforward
 to use and easy to understand.
 
-Flask-RPC does not follow any current already existing
-RPC standard, but uses its own standard,
-and primarily works with JSON over HTTP POST
-requests to call functions.
+Flask-RPC uses mRPC as its protocol, which is a
+micro JSON-based protocol that allows for
+easy communication between the client and server.
 
 This extension is designed to stay slim and provides
 methods for generating requests and request responses.
@@ -40,7 +39,7 @@ The typical request/response cycle is as follows:
 
 ```json
 {
-  "frpc": 1.0,
+  "wrpc": 1.0,
   "function": "add_numbers",
   "data": [
     1,
@@ -54,7 +53,7 @@ The typical request/response cycle is as follows:
 
 ```json
 {
-  "frpc": 1.0,
+  "wrpc": 1.0,
   "ok": true,
   "message": "Function 'add_numbers' executed successfully",
   "data": 6
@@ -65,7 +64,7 @@ The typical request/response cycle is as follows:
 
 [This repo](https://github.com/CheeseCake87/flask-rpc) contains a working example of Flask-RPC.
 
-It also includes an example of using the [JS library](https://github.com/CheeseCake87/flask-rpc-js) that helps
+It also includes an example of using the [JS library](https://github.com/CheeseCake87/wrpc-js) that helps
 in making requests via fetch to Flask-RPC.
 
 ### Simplest example
@@ -138,7 +137,7 @@ response = requests.post(
 )
 ```
 
-or, if you're using the [JS library](https://github.com/CheeseCake87/flask-rpc-js):
+or, if you're using the [JS library](https://github.com/CheeseCake87/wrpc-js):
 
 ```js
 fetch("/rpc", {
@@ -146,7 +145,7 @@ fetch("/rpc", {
     headers: {
         "Content-Type": "application/json"
     },
-    body: frpc(
+    body: wrpc(
         function_ = "add_numbers",
         data = [1, 2, 3]
     )
@@ -157,7 +156,7 @@ Will return:
 
 ```json
 {
-  "frpc": 1.0,
+  "wrpc": 1.0,
   "ok": true,
   "message": "Function 'add_numbers' executed successfully",
   "data": 6

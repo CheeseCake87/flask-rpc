@@ -19,7 +19,7 @@ class RPCResponse:
         :param data: Any (JSON serializable)
         :return:
         """
-        r = {"frpc": 1.0, "ok": False}
+        r = {"wrpc": 1.0, "ok": False}
 
         if message:
             r["message"] = message
@@ -45,7 +45,7 @@ class RPCResponse:
         :param message: Str
         :return:
         """
-        r = {"frpc": 1.0, "ok": True}
+        r = {"wrpc": 1.0, "ok": True}
 
         if message:
             r["message"] = message

@@ -1,7 +1,7 @@
 <html lang="gb">
 <head>
     <title>Development</title>
-    <script src="https://unpkg.com/frpc-js@latest/cdn.js"></script>
+    <script src="https://unpkg.com/wrpc-js@latest/cdn.js"></script>
     <script>
         {# The examples below are setting and getting session cookies over fetch #}
         function set_session() {
@@ -12,7 +12,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: frpc('login', null),
+                    body: wrpc('login', null),
                 }
             )
                 .then(response => response.json())
@@ -27,7 +27,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: frpc('session', null),
+                    body: wrpc('session', null),
                 }
             )
                 .then(response => response.json())

@@ -157,8 +157,8 @@ class RPC:
         if not _json:
             return RPCResponse.fail("Request must not be empty.")
 
-        if not _json.get("frpc") == 1.0:
-            return RPCResponse.fail("Invalid frpc version.")
+        if not _json.get("wrpc") == 1.0:
+            return RPCResponse.fail("Invalid wrpc version.")
 
         try:
             rpcm = RPCModel(**_json)

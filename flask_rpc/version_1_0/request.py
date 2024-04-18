@@ -19,4 +19,4 @@ class RPCRequest:
         :param data: Any (JSON serializable)
         :return:
         """
-        return {"frpc": 1.0, "function": function, "data": data}
+        return {"wrpc": 1.0, "function": function, "data": data}
