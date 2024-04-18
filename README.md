@@ -166,7 +166,7 @@ Will return:
 
 ## Security
 
-You can lock down using RPC routes by using sessions and or host checking.
+You can lock down RPC routes by using sessions and or host checking.
 
 ### Session Auth
 
