@@ -20,8 +20,8 @@ requests to call functions.
 This extension is designed to stay slim and provides
 methods for generating requests and request responses.
 
-It does not enforce or validate the data passed in, or the 
-data being sent back; this is left to the user to implement 
+It does not enforce or validate the data passed in, or the
+data being sent back; this is left to the user to implement
 in whatever way they feel comfortable (or not at all, if there's
 no need for it)
 
@@ -162,4 +162,60 @@ Will return:
   "message": "Function 'add_numbers' executed successfully",
   "data": 6
 }
+```
+
+## Security
+
+You can lock down using RPC routes by using sessions and or host checking.
+
+### Session Auth
+
+`from quart_rpc.latest import RPCAuthSessionKey`
+
+```python
+...
+RPC(
+    app,  # or RPC(blueprint, ...)
+    url_prefix="/rpc",
+    session_auth=RPCAuthSessionKey("logged_in", [True]),
+    functions={
+        "add_numbers": add_numbers
+    }
+)
+...
+```
+
+or a list of RPCAuthSessionKey:
+
+```python
+...
+RPC(
+    app,  # or RPC(blueprint, ...)
+    url_prefix="/rpc",
+    session_auth=[
+        RPCAuthSessionKey("logged_in", [True]),
+        RPCAuthSessionKey("user_type", ["admin"])
+    ],
+    functions={
+        "add_numbers": add_numbers
+    }
+)
+...
+```
+
+### Host Auth
+
+In the following example, only requests from `127.0.0.1:5000` will be accepted.
+
+```python
+...
+RPC(
+    app,  # or RPC(blueprint, ...)
+    url_prefix="/rpc",
+    host_auth=["127.0.0.1:5000"],
+    functions={
+        "add_numbers": add_numbers
+    }
+)
+...
 ```

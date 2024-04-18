@@ -1,98 +1,29 @@
 import typing as t
 
-from flask import Flask, Blueprint, request
-from pydantic import BaseModel, ValidationError
+from flask import Blueprint, Flask, request, session
+from pydantic import ValidationError
 
-
-class RPCModel(BaseModel):
-    frpc: float
-    function: str
-    data: t.Any
-
-
-class RPCRequest:
-    @classmethod
-    def build(
-        cls,
-        function: str,
-        data: t.Union[
-            str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
-        ] = None,
-    ) -> t.Dict[str, t.Any]:
-        """
-        Build a request.
-
-        Version 1.0.
-
-        :param function: Str
-        :param data: Any (JSON serializable)
-        :return:
-        """
-        return {"frpc": 1.0, "function": function, "data": data}
-
-
-class RPCResponse:
-    @classmethod
-    def fail(
-        cls,
-        message: str = None,
-        data: t.Union[
-            str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
-        ] = None,
-    ):
-        """
-        Return a failed response.
-
-        Version 1.0.
-
-        :param message: Str
-        :param data: Any (JSON serializable)
-        :return:
-        """
-        r = {"frpc": 1.0, "ok": False}
-
-        if message:
-            r["message"] = message
-        if data:
-            r["data"] = data
-
-        return r
-
-    @classmethod
-    def success(
-        cls,
-        data: t.Union[
-            str, int, float, bool, t.List[t.Any], t.Dict[str, t.Any], None
-        ] = None,
-        message: str = None,
-    ):
-        """
-        Return a successful response.
-
-        Version 1.0.
-
-        :param data: Any (JSON serializable)
-        :param message: Str
-        :return:
-        """
-        r = {"frpc": 1.0, "ok": True}
-
-        if message:
-            r["message"] = message
-        if data:
-            r["data"] = data
-
-        return r
+from ._protocols import RPCAuthSessionKey
+from .model import RPCModel
+from .response import RPCResponse
+from .utilities import snake_case
 
 
 class RPC:
     LOOKUP: t.Dict[str, t.Callable]
 
+    _host_auth: t.List[str]
+    _session_auth: t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+
     def __init__(
         self,
         app_or_blueprint: t.Union[Flask, Blueprint],
+        functions: t.Optional[t.Dict[str, t.Callable]] = None,
         url_prefix: str = "/",
-        functions: t.Dict[str, t.Callable] = None,
+        host_auth: t.Optional[t.List[str]] = None,
+        session_auth: t.Optional[
+            t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+        ] = None,
     ):
         """
         Register the RPC route.
@@ -113,6 +44,24 @@ class RPC:
 
         if functions:
             self.functions(**functions)
+
+        if host_auth:
+            self.host_auth(host_auth)
+        else:
+            self.host_auth([])
+
+        if session_auth:
+            self.session_auth(session_auth)
+        else:
+            self.session_auth([])
+
+    def host_auth(self, hosts: t.List[str]):
+        self._host_auth = hosts
+
+    def session_auth(
+        self, auth_session_keys: t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+    ):
+        self._session_auth = auth_session_keys
 
     def functions(self, **kwargs: t.Callable):
         """
@@ -161,25 +110,58 @@ class RPC:
     def _register_route(
         self, route_compatible: t.Union[Flask, Blueprint], url_prefix: str
     ):
+        if not url_prefix.startswith("/"):
+            url_prefix = f"/{url_prefix}"
+
+        _default = ("/", "/rpc")
+        _blueprint_name = ""
+        if isinstance(route_compatible, Blueprint):
+            _blueprint_name = f"_{route_compatible.name}"
+
         route_compatible.add_url_rule(
             url_prefix,
             view_func=self._rpc_route,
+            endpoint="_rpc"
+            if url_prefix in _default
+            else f"_rpc{_blueprint_name}_{snake_case(url_prefix)}",
             provide_automatic_options=True,
             methods=["POST"],
         )
 
     def _rpc_route(self):
+        if not self.LOOKUP:
+            return RPCResponse.fail("No functions registered.")
+
+        if self._session_auth:
+            if isinstance(self._session_auth, RPCAuthSessionKey):
+                if not self._session_auth.check(session):
+                    return RPCResponse.fail("Unauthorized.")
+
+            if isinstance(self._session_auth, list):
+                for auth_session_key in self._session_auth:
+                    if isinstance(auth_session_key, RPCAuthSessionKey):
+                        if not auth_session_key.check(session):
+                            return RPCResponse.fail("Unauthorized.")
+                    else:
+                        raise ValueError("Invalid session_auth type.")
+
+        if self._host_auth:
+            if request.host not in self._host_auth:
+                return RPCResponse.fail(f"Unauthorized ({request.host})")
+
         if not request.is_json:
             return RPCResponse.fail("Request must be JSON.")
 
-        if not request.json:
+        _json = request.get_json()
+
+        if not _json:
             return RPCResponse.fail("Request must not be empty.")
 
-        if not request.json.get("frpc") == 1.0:
+        if not _json.get("frpc") == 1.0:
             return RPCResponse.fail("Invalid frpc version.")
 
         try:
-            rpcm = RPCModel(**request.json)
+            rpcm = RPCModel(**_json)
         except ValidationError:
             return RPCResponse.fail("Invalid request.")
 
@@ -192,6 +174,3 @@ class RPC:
             return successful_response
 
         return RPCResponse.fail("Unsuccessful command execution.")
-
-
-__all__ = ["RPC", "RPCResponse", "RPCModel"]
