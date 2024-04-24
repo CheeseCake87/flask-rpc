@@ -47,7 +47,7 @@ class RPCResponse:
         """
         r = {
             "wrpc": 1.0,
-            "ok": False,
+            "ok": True,
             "message": message if message else None,
             "data": data if data else None,
         }
