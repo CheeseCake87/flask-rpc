@@ -169,7 +169,7 @@ You can lock down RPC routes by using sessions and or host checking.
 
 ### Session Auth
 
-`from quart_rpc.latest import RPCAuthSessionKey`
+`from flask_rpc.latest import RPCAuthSessionKey`
 
 ```python
 ...
