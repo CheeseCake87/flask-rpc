@@ -12,28 +12,26 @@ in your Flask application to be called
 remotely. It is designed to be straightforward
 to use and easy to understand.
 
-Flask-RPC uses [wRPC (Wee RPC)](https://github.com/CheeseCake87/wRPC) 
+Flask-RPC currently only uses the [weeRPC](https://github.com/CheeseCake87/weeRPC) 
 as its protocol, which is a micro JSON-based protocol that allows for
 easy communication between the client and server.
 
 This extension is designed to stay slim and provides
-methods for generating requests and request responses.
+methods for generating requests and responses.
 
 It does not enforce or validate the data passed in, or the
-data being sent back; this is left to the user to implement
-in whatever way they feel comfortable (or not at all, if there's
+data being sent back; this is left to you to implement
+in whatever way you feel comfortable (or not at all, if there's
 no need for it)
 
-Flask-RPC does validate the request coming in using
-Pydantic.
+Flask-RPC does validate the version of weeRPC on an incoming request. This 
+is to ensure that the request is structured in a way that the version 
+of RPC you are using expects.
 
-This is to ensure that the request is structured
-in the way to whatever version of Flask-RPC you are using.
+Other than that, you are free to use whatever data validation
+you feel comfortable with. Pydantic and Marshmallow are good choices.
 
-Other than that, the user is free to use whatever data validation
-they feel comfortable with. Pydantic and Marshmallow are good choices.
-
-The typical request/response cycle is as follows:
+The typical request/response cycle of weeRPC is as follows:
 
 **Request**
 
