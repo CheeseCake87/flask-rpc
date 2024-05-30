@@ -6,13 +6,15 @@ pip install flask-rpc
 
 ---
 
+> 🚨Seeking contributions to bring more RPC protocols to Flask-RPC.
+
 Flask - Remote Procedure Call (RPC) is a simple
 library that allows you to expose functions
 in your Flask application to be called
 remotely. It is designed to be straightforward
 to use and easy to understand.
 
-Flask-RPC currently only uses the [weeRPC](https://github.com/CheeseCake87/weeRPC) 
+Flask-RPC currently only uses the [weeRPC](https://github.com/CheeseCake87/weeRPC)
 as its protocol, which is a micro JSON-based protocol that allows for
 easy communication between the client and server.
 
@@ -24,8 +26,8 @@ data being sent back; this is left to you to implement
 in whatever way you feel comfortable (or not at all, if there's
 no need for it)
 
-Flask-RPC does validate the version of weeRPC on an incoming request. This 
-is to ensure that the request is structured in a way that the version 
+Flask-RPC does validate the version of weeRPC on an incoming request. This
+is to ensure that the request is structured in a way that the version
 of RPC you are using expects.
 
 Other than that, you are free to use whatever data validation
