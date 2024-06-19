@@ -1,18 +1,18 @@
 <html lang="gb">
 <head>
     <title>Development</title>
-    <script src="https://unpkg.com/wrpc-js@latest/cdn.js"></script>
+    <script src="https://unpkg.com/weerpcjs@latest/cdn.js"></script>
     <script>
         {# The examples below are setting and getting session cookies over fetch #}
         function set_session() {
             fetch(
-                'http://127.0.0.1:5000/rpc/auth/login',
+                'http://127.0.0.1:5001/rpc/auth/login',
                 {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: wrpc('login', null),
+                    body: weerpc('login', null),
                 }
             )
                 .then(response => response.json())
@@ -21,13 +21,13 @@
 
         function do_fetch() {
             fetch(
-                'http://127.0.0.1:5000/rpc/auth',
+                'http://127.0.0.1:5001/rpc/auth/',
                 {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: wrpc('session', null),
+                    body: weerpc('session', null),
                 }
             )
                 .then(response => response.json())
