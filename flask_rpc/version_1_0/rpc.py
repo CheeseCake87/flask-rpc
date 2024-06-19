@@ -14,24 +14,37 @@ class RPC:
 
     _host_auth: t.List[str]
     _session_auth: t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+    _funcs_host_auth_lookup: t.Dict[str, t.List[str]]
+    _funcs_session_auth_lookup: t.Dict[str, t.List[RPCAuthSessionKey]]
 
     def __init__(
         self,
         app_or_blueprint: t.Union[Flask, Blueprint],
         functions: t.Optional[t.Dict[str, t.Callable]] = None,
         url_prefix: str = "/",
-        host_auth: t.Optional[t.List[str]] = None,
         session_auth: t.Optional[
             t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
         ] = None,
+        host_auth: t.Optional[t.List[str]] = None,
     ):
         """
         Register the RPC route.
 
+        host_auth will check the request.host, setting this will mean
+        that only requests from the specified hosts will be allowed.
+
+        session_auth will check the session, setting this will mean
+        that only requests with the specified session key, and value will be allowed.
+
         :param app_or_blueprint: Flask / Blueprint
+        :param functions: Optional Dict[str, Callable]
         :param url_prefix: Str
+        :param host_auth: Optional List[str]
+        :param session_auth: Optional Union[RPCAuthSessionKey, List[RPCAuthSessionKey]]
         """
         self.LOOKUP = {}
+        self._funcs_host_auth_lookup = {}
+        self._funcs_session_auth_lookup = {}
 
         if not hasattr(app_or_blueprint, "add_url_rule"):
             raise TypeError(
@@ -63,12 +76,29 @@ class RPC:
     ):
         self._session_auth = auth_session_keys
 
-    def functions(self, **kwargs: t.Callable):
+    def functions(
+        self,
+        session_auth__: t.Optional[
+            t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+        ] = None,
+        host_auth__: t.Optional[t.List[str]] = None,
+        **kwargs: t.Callable,
+    ):
         """
         Register RPC functions.
 
-        remote_name=local_name
+        .functions(lookup_name_here=callable_function_here)
 
+        host_auth will check the request.host only for the functions being
+        added here. Setting this will mean that only requests from the
+        specified hosts will be allowed.
+
+        session_auth will check the session only for the functions being
+        added here. setting this will mean that only requests with the specified
+        session key, and value will be allowed.
+
+        :param host_auth__: Optional List[str]
+        :param session_auth__: Optional RPCAuthSessionKey or List[RPCAuthSessionKey]
         :param kwargs:
         :return: None
         """
@@ -84,15 +114,61 @@ class RPC:
 
             self.LOOKUP[k] = v
 
-    def functions_auto_name(self, functions: t.Iterable[t.Callable]):
+            if session_auth__:
+                if isinstance(session_auth__, RPCAuthSessionKey):
+                    if k not in self._funcs_session_auth_lookup:
+                        self._funcs_session_auth_lookup[k] = [session_auth__]
+                    else:
+                        if session_auth__ not in self._funcs_session_auth_lookup[k]:
+                            self._funcs_session_auth_lookup[k].append(session_auth__)
+
+                elif isinstance(session_auth__, list):
+                    for auth_session_key in session_auth__:
+                        if isinstance(auth_session_key, RPCAuthSessionKey):
+                            if k not in self._funcs_session_auth_lookup:
+                                self._funcs_session_auth_lookup[k] = [auth_session_key]
+                            else:
+                                if (
+                                    auth_session_key
+                                    not in self._funcs_session_auth_lookup[k]
+                                ):
+                                    self._funcs_session_auth_lookup[k].append(
+                                        auth_session_key
+                                    )
+
+            if host_auth__:
+                if k not in self._funcs_host_auth_lookup:
+                    self._funcs_host_auth_lookup[k] = host_auth__
+                else:
+                    if host_auth__ not in self._funcs_host_auth_lookup[k]:
+                        self._funcs_host_auth_lookup[k] = (
+                            self._funcs_host_auth_lookup[k] + host_auth__
+                        )
+
+    def functions_auto_name(
+            self,
+            functions: t.Iterable[t.Callable],
+            session_auth__: t.Optional[
+                t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+            ] = None,
+            host_auth__: t.Optional[t.List[str]] = None,
+    ):
         """
         Register RPC functions with their local names.
 
-        remote_name=local_name
+        .functions_auto_name([callable_function_here])
 
-        remote_name will always be the name of the function.
+        host_auth will check the request.host only for the functions being
+        added here. Setting this will mean that only requests from the
+        specified hosts will be allowed.
+
+        session_auth will check the session only for the functions being
+        added here. setting this will mean that only requests with the specified
+        session key, and value will be allowed.
 
         :param functions: Iterable of functions
+        :param host_auth__: Optional List[str]
+        :param session_auth__: Optional RPCAuthSessionKey or List[RPCAuthSessionKey]
         :return: None
         """
         for f in functions:
@@ -106,6 +182,44 @@ class RPC:
                 raise ValueError(f"Function {f.__name__} already exists.")
 
             self.LOOKUP[f.__name__] = f
+
+            if session_auth__:
+                if isinstance(session_auth__, RPCAuthSessionKey):
+                    if f.__name__ not in self._funcs_session_auth_lookup:
+                        self._funcs_session_auth_lookup[f.__name__] = [session_auth__]
+                    else:
+                        if (
+                                session_auth__
+                                not in self._funcs_session_auth_lookup[f.__name__]
+                        ):
+                            self._funcs_session_auth_lookup[f.__name__].append(
+                                session_auth__
+                            )
+
+                elif isinstance(session_auth__, list):
+                    for auth_session_key in session_auth__:
+                        if isinstance(auth_session_key, RPCAuthSessionKey):
+                            if f.__name__ not in self._funcs_session_auth_lookup:
+                                self._funcs_session_auth_lookup[f.__name__] = [
+                                    auth_session_key
+                                ]
+                            else:
+                                if (
+                                        auth_session_key
+                                        not in self._funcs_session_auth_lookup[f.__name__]
+                                ):
+                                    self._funcs_session_auth_lookup[f.__name__].append(
+                                        auth_session_key
+                                    )
+
+            if host_auth__:
+                if f.__name__ not in self._funcs_host_auth_lookup:
+                    self._funcs_host_auth_lookup[f.__name__] = host_auth__
+                else:
+                    if host_auth__ not in self._funcs_host_auth_lookup[f.__name__]:
+                        self._funcs_host_auth_lookup[f.__name__] = (
+                                self._funcs_host_auth_lookup[f.__name__] + host_auth__
+                        )
 
     def _register_route(
         self, route_compatible: t.Union[Flask, Blueprint], url_prefix: str
@@ -169,6 +283,15 @@ class RPC:
             assert rpcm.function in self.LOOKUP
         except AssertionError:
             return RPCResponse.fail("Invalid function.")
+
+        if self._funcs_session_auth_lookup.get(rpcm.function):
+            for auth_session_key in self._funcs_session_auth_lookup[rpcm.function]:
+                if not auth_session_key.check(session):
+                    return RPCResponse.fail("Unauthorized.")
+
+        if self._funcs_host_auth_lookup.get(rpcm.function):
+            if request.host not in self._funcs_host_auth_lookup[rpcm.function]:
+                return RPCResponse.fail(f"Unauthorized ({request.host})")
 
         if successful_response := self.LOOKUP[rpcm.function](rpcm.data):
             return successful_response
