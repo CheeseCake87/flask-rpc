@@ -165,16 +165,21 @@ Will return:
 
 ## Security
 
-You can lock down RPC routes by using sessions and or host checking.
+You can lock down RPC routes by using sessions and, or host checking.
 
-### Session Auth
+### Global Session Auth
 
-`from flask_rpc.latest import RPCAuthSessionKey`
+This will check the Flask session for a key value pair, this will apply
+this check to every function registered.
+
+```python
+from flask_rpc.latest import RPCAuthSessionKey
+```
 
 ```python
 ...
 RPC(
-    app,  # or RPC(blueprint, ...)
+    app,  # or blueprint
     url_prefix="/rpc",
     session_auth=RPCAuthSessionKey("logged_in", [True]),
     functions={
@@ -189,7 +194,7 @@ or a list of RPCAuthSessionKey:
 ```python
 ...
 RPC(
-    app,  # or RPC(blueprint, ...)
+    app,  # or blueprint
     url_prefix="/rpc",
     session_auth=[
         RPCAuthSessionKey("logged_in", [True]),
@@ -202,19 +207,74 @@ RPC(
 ...
 ```
 
-### Host Auth
+### Global Host Auth
 
 In the following example, only requests from `127.0.0.1:5000` will be accepted.
+
+This will apply this check to all functions registered.
 
 ```python
 ...
 RPC(
-    app,  # or RPC(blueprint, ...)
+    app,  # or blueprint
     url_prefix="/rpc",
     host_auth=["127.0.0.1:5000"],
     functions={
         "add_numbers": add_numbers
     }
+)
+...
+```
+
+### Scoped Session Auth
+
+This will check the Flask session for a key value pair, but only in the
+specified functions being registered.
+
+```python
+from flask_rpc.latest import RPCAuthSessionKey
+```
+
+```python
+...
+rpc = RPC(
+    app,  # or blueprint
+    url_prefix="/rpc",
+)
+rpc.functions(
+    session_auth__=RPCAuthSessionKey("logged_in", [True]),
+    add_numbers=add_numbers
+)
+...
+```
+
+Like the example above, you can also pass a list of RPCAuthSessionKey.
+
+```python
+...
+rpc.functions(
+    session_auth__=[
+        RPCAuthSessionKey("logged_in", [True]),
+        RPCAuthSessionKey("user_type", ["admin"])
+    ],
+    add_numbers=add_numbers
+)
+...
+```
+
+### Scoped Host Auth
+
+Only requests from `127.0.0.1:5000` will be accepted on the functions specified.
+
+```python
+...
+rpc = RPC(
+    app,  # or blueprint
+    url_prefix="/rpc",
+)
+rpc.functions(
+    host_auth=["127.0.0.1:5000"],
+    add_numbers=add_numbers
 )
 ...
 ```
