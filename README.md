@@ -39,7 +39,7 @@ The typical request/response cycle of weeRPC is as follows:
 
 ```json
 {
-  "wrpc": 1.0,
+  "weerpc": 1.1,
   "function": "add_numbers",
   "data": [
     1,
@@ -53,7 +53,7 @@ The typical request/response cycle of weeRPC is as follows:
 
 ```json
 {
-  "wrpc": 1.0,
+  "weerpc": 1.1,
   "ok": true,
   "message": "Function 'add_numbers' executed successfully",
   "data": 6
@@ -64,7 +64,7 @@ The typical request/response cycle of weeRPC is as follows:
 
 [This repo](https://github.com/CheeseCake87/flask-rpc) contains a working example of Flask-RPC.
 
-It also includes an example of using the [JS library](https://github.com/CheeseCake87/wrpc-js) that helps
+It also includes an example of using the [JS library](https://github.com/CheeseCake87/weeRPCjs) that helps
 in making requests via fetch to Flask-RPC.
 
 ### Simplest example
