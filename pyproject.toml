@@ -6,7 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "flask-rpc"
 version = "1.6.2"
 authors = [{ name = "David Carmichael", email = "david@uilix.com" }]
-license = { file = "LICENSE" }
+license = { file = "LICENSE.txt" }
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Framework :: Flask",
