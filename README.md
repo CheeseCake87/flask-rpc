@@ -1,4 +1,4 @@
-# 📣 Flask-RPC
+# Flask-RPC 📣
 
 ```bash
 pip install flask-rpc
