@@ -22,15 +22,14 @@ def create():
         json={
             "frpc": 1.0,  # Required
             "function": "create",
-            "data": {
-                "name": f.name()
-            }
-        }
+            "data": {"name": f.name()},
+        },
     )
     pprint(response.json(), indent=2)
 
 
 # Using the RCPRequest class to make a request to the server
+
 
 @run.command("create-class")
 def create_class():
@@ -39,10 +38,7 @@ def create_class():
     click.echo("Creating a client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json=Req.build(
-            function="create",
-            data={"name": f.name()}
-        )
+        json=Req.build(function="create", data={"name": f.name()}),
     )
     pprint(response.json(), indent=2)
 
@@ -52,10 +48,7 @@ def read():
     click.echo("Reading client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json=Req.build(
-            function="read",
-            data={"client_id": 1}
-        )
+        json=Req.build(function="read", data={"client_id": 1}),
     )
     pprint(response.json(), indent=2)
 
@@ -65,10 +58,7 @@ def read_fail():
     click.echo("Reading client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients/read",
-        json=Req.build(
-            function="read",
-            data={"client_id": 11111}
-        )
+        json=Req.build(function="read", data={"client_id": 11111}),
     )
     pprint(response.json(), indent=2)
 
@@ -78,10 +68,7 @@ def update():
     click.echo("Updating client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients/update",
-        json=Req.build(
-            function="update",
-            data={"client_id": 1, "name": "John Doe"}
-        )
+        json=Req.build(function="update", data={"client_id": 1, "name": "John Doe"}),
     )
     pprint(response.json(), indent=2)
 
@@ -91,10 +78,7 @@ def delete():
     click.echo("Deleting client...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json=Req.build(
-            function="delete",
-            data={"client_id": 1}
-        )
+        json=Req.build(function="delete", data={"client_id": 1}),
     )
     pprint(response.json(), indent=2)
 
@@ -104,10 +88,7 @@ def fail():
     click.echo("Sending bad command...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/clients",
-        json=Req.build(
-            function="fail",
-            data={"client_id": 1}
-        )
+        json=Req.build(function="fail", data={"client_id": 1}),
     )
     pprint(response.json(), indent=2)
 
@@ -117,10 +98,7 @@ def test1():
     click.echo("Running function...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/tester",
-        json=Req.build(
-            function="add_numbers",
-            data=[1, 2, 3]
-        )
+        json=Req.build(function="add_numbers", data=[1, 2, 3]),
     )
     pprint(response.json(), indent=2)
 
@@ -130,13 +108,10 @@ def test2():
     click.echo("Running function...")
     response = requests.post(
         "http://127.0.0.1:5000/rpc/tester",
-        json=Req.build(
-            function="add_string",
-            data="World"
-        )
+        json=Req.build(function="add_string", data="World"),
     )
     pprint(response.json(), indent=2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

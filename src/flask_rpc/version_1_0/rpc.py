@@ -146,12 +146,12 @@ class RPC:
                         )
 
     def functions_auto_name(
-            self,
-            functions: t.Iterable[t.Callable],
-            session_auth__: t.Optional[
-                t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
-            ] = None,
-            host_auth__: t.Optional[t.List[str]] = None,
+        self,
+        functions: t.Iterable[t.Callable],
+        session_auth__: t.Optional[
+            t.Union[RPCAuthSessionKey, t.List[RPCAuthSessionKey]]
+        ] = None,
+        host_auth__: t.Optional[t.List[str]] = None,
     ):
         """
         Register RPC functions with their local names.
@@ -189,8 +189,8 @@ class RPC:
                         self._funcs_session_auth_lookup[f.__name__] = [session_auth__]
                     else:
                         if (
-                                session_auth__
-                                not in self._funcs_session_auth_lookup[f.__name__]
+                            session_auth__
+                            not in self._funcs_session_auth_lookup[f.__name__]
                         ):
                             self._funcs_session_auth_lookup[f.__name__].append(
                                 session_auth__
@@ -205,8 +205,8 @@ class RPC:
                                 ]
                             else:
                                 if (
-                                        auth_session_key
-                                        not in self._funcs_session_auth_lookup[f.__name__]
+                                    auth_session_key
+                                    not in self._funcs_session_auth_lookup[f.__name__]
                                 ):
                                     self._funcs_session_auth_lookup[f.__name__].append(
                                         auth_session_key
@@ -218,7 +218,7 @@ class RPC:
                 else:
                     if host_auth__ not in self._funcs_host_auth_lookup[f.__name__]:
                         self._funcs_host_auth_lookup[f.__name__] = (
-                                self._funcs_host_auth_lookup[f.__name__] + host_auth__
+                            self._funcs_host_auth_lookup[f.__name__] + host_auth__
                         )
 
     def _register_route(

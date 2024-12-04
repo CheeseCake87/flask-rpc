@@ -77,7 +77,7 @@ class DataDict:
         return self._data.get(key, value_if_not_found)
 
     def has_protected_field(
-            self, values, protected_fields: t.Optional[t.List[str]] = None
+        self, values, protected_fields: t.Optional[t.List[str]] = None
     ):
         if not protected_fields:
             return False

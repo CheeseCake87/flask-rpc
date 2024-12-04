@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import select
 
-from app.extensions import db
+from example.extensions import db
 
 
 class Clients(db.Model):
@@ -13,7 +13,7 @@ class Clients(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now())
 
     @classmethod
-    def create(cls, name: str, **_) -> tuple[bool, str, t.Union[None, t.Self]]:
+    def create(cls, name: str, **_) -> t.Tuple[bool, str, t.Any]:
         client = cls(name=name)
 
         db.session.add(client)
@@ -22,7 +22,7 @@ class Clients(db.Model):
         return True, "OK", client
 
     @classmethod
-    def read(cls, client_id: int, **_) -> tuple[bool, str, t.Union[None, t.Self]]:
+    def read(cls, client_id: int, **_) -> t.Tuple[bool, str, t.Any]:
         q = select(cls).where(cls.client_id == client_id)
         r = db.session.execute(q).scalar_one_or_none()
 
@@ -32,9 +32,7 @@ class Clients(db.Model):
         return True, "OK", r
 
     @classmethod
-    def update(
-        cls, client_id: int, name: str, **_
-    ) -> tuple[bool, str, t.Union[None, t.Self]]:
+    def update(cls, client_id: int, name: str, **_) -> t.Tuple[bool, str, t.Any]:
         q = select(cls).where(cls.client_id == client_id)
         r = db.session.execute(q).scalar_one_or_none()
 
@@ -47,7 +45,7 @@ class Clients(db.Model):
         return True, "OK", r
 
     @classmethod
-    def delete(cls, client_id: int, **_) -> tuple[bool, str, t.Union[None, t.Self]]:
+    def delete(cls, client_id: int, **_) -> t.Tuple[bool, str, t.Any]:
         q = select(cls).where(cls.client_id == client_id)
         r = db.session.execute(q).scalar_one_or_none()
 

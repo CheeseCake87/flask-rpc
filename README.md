@@ -1,12 +1,16 @@
 # Flask-RPC 📣
 
+[![PyPI version](https://img.shields.io/pypi/v/flask-rpc)](https://pypi.org/project/flask-rpc/)
+[![License](https://img.shields.io/github/license/CheeseCake87/flask-rpc)](https://raw.githubusercontent.com/CheeseCake87/flask-rpc/master/LICENSE.txt)
+![black](https://img.shields.io/badge/code%20style-black-000000.svg)
+
 ```bash
 pip install flask-rpc
 ```
 
 ---
 
-> 🚨Seeking contributions to bring more RPC protocols to Flask-RPC.
+> 🚨 Seeking contributions to bring more RPC protocols to Flask-RPC.
 
 Flask - Remote Procedure Call (RPC) is a simple
 library that allows you to expose functions
@@ -63,6 +67,10 @@ The typical request/response cycle of weeRPC is as follows:
 ## Usage
 
 [This repo](https://github.com/CheeseCake87/flask-rpc) contains a working example of Flask-RPC.
+
+```bash
+flask --app example run
+```
 
 It also includes an example of using the [JS library](https://github.com/CheeseCake87/weeRPCjs) that helps
 in making requests via fetch to Flask-RPC.

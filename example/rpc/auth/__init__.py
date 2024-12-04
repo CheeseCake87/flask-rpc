@@ -13,6 +13,4 @@ login_rpc.functions(login=login)
 
 authenticated_rpc = RPC(auth)
 authenticated_rpc.functions(logout=logout, session=get_session)
-authenticated_rpc.session_auth(
-    RPCAuthSessionKey("logged_in", [True])
-)
+authenticated_rpc.session_auth(RPCAuthSessionKey("logged_in", [True]))

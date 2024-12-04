@@ -19,3 +19,9 @@ dependencies = [
     'Flask',
     'pydantic',
 ]
+
+[tool.ruff]
+src = ["src"]
+fix = true
+show-fixes = true
+output-format = "full"

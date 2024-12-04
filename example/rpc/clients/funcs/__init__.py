@@ -1,4 +1,4 @@
-from app.models.clients import Clients
+from example.models.clients import Clients
 from flask_rpc.latest import RPCResponse
 
 
@@ -56,6 +56,4 @@ def delete_client(data):
     if not status:
         return RPCResponse.fail(message, data)
 
-    return RPCResponse.success(
-        {"client_id": result.client_id, "name": result.name}
-    )
+    return RPCResponse.success({"client_id": result.client_id, "name": result.name})

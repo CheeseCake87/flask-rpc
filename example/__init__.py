@@ -1,17 +1,17 @@
 from flask import Flask, render_template
 from flask_orjson import OrjsonProvider
 
-from app.extensions import db
+from example.extensions import db
 
 
 def load_blueprints(flask_app):
-    from app.rpc import rpc
+    from example.rpc import rpc
 
     flask_app.register_blueprint(rpc)
 
 
 def load_models(flask_app, flask_db):
-    from app.models import clients
+    from example.models import clients
 
     flask_db.init_app(flask_app)
 
